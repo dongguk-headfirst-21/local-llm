@@ -2,7 +2,7 @@
 set -euo pipefail
 
 MODEL="qwen3.6:27b"
-OLLAMA_PORT=11434
+OLLAMA_PORT=9714
 
 # ================================
 # 1. GPU / 드라이버 버전 체크
@@ -52,7 +52,8 @@ if pgrep -x "ollama" &>/dev/null; then
   echo "  Ollama server already running, skipping."
 else
   export OLLAMA_HOST=0.0.0.0:${OLLAMA_PORT}
-  nohup ollama serve > /tmp/ollama.log 2>&1 &
+  export OLLAMA_MODELS=/home/yujin/directory_to_share/models
+  nohup ollama serve > /home/yujin/directory_to_share/ollama.log 2>&1 &
   disown $!
 
   echo "  Waiting for server to be ready..."
@@ -64,7 +65,7 @@ else
     sleep 1
     if [ "$i" -eq 30 ]; then
       echo "  ERROR: Ollama server did not start in time."
-      echo "  Run: tail -f /tmp/ollama.log"
+      echo "  Run: tail -f /home/yujin/directory_to_share/ollama.log"
       exit 1
     fi
   done
